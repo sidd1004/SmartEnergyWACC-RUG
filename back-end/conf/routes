@@ -1,0 +1,30 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+GET     /EnergyConsumptionStream                                                controllers.EnergyController.getEnergyConsumptionStream
+
+GET     /energyConsumptionRT/:userName                                          controllers.EnergyController.energyConsumptionRT(userName: String)
+
+GET     /EnergyConsumptionWS/:userName                                          controllers.EnergyController.energyConsumptionWS(userName: String)
+
+GET     /EnergyConsumptionHistoryWS/:userName/:lookbackPeriod                   controllers.EnergyController.energyConsumptionHistoryWS(userName: String, lookbackPeriod: String)
+
+# USER CONTROLLER ROUTES
+
+POST    /userAuth/:userName/:password                                           controllers.UserController.authenticateLogin(userName: String, password: String)
+
+POST    /addUser/:userName/:password                                            controllers.UserController.createNewUser(userName: String, password: String)
+
+POST    /deleteUser/:userName                                                   controllers.UserController.deleteUser(userName: String)
+
+POST     /setEnergyToTrade/:userName/:password/:energyToTrade                  controllers.UserController.setEnergyToTrade(userName: String, password: String, energyToTrade:String)
+
+POST     /getUserInformation/:userName                                         controllers.UserController.getUserInformation(userName: String)
+
+# STREAM CONTROLLERS
+
+GET     /kafka_events                                                           controllers.StreamController.akkaStreamSocket
+
+GET     /kafka_Actor_stream                                                     controllers.StreamController.akkaActorSocket

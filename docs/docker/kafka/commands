@@ -1,0 +1,8 @@
+# IMPORTANT
+Download the kafka jar from apache and unzip it and navigate to the bin folder inside the extracted folder
+
+# Start a Consumer
+ sh kafka-console-consumer.sh  --bootstrap-server localhost:9092 --topic testtopic --from-beginning
+
+# Start a Producer
+sh kafka-console-producer.sh  --broker-list localhost:9092  kafka -topic testtopic

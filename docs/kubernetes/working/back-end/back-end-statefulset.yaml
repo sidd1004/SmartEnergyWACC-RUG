@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-end
+spec:
+  #  serviceName: back-end
+  replicas: 1
+  selector:
+    matchLabels:
+      role: back-end
+  template:
+    metadata:
+      labels:
+        role: back-end
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: back-end
+          image: swastikrug/back-end:latest
+          ports:
+            - containerPort: 9000
+          env:
+            - name: KAFKA_URL
+              value: "kafka://kafka:9092"
+            - name: KAFKA_CONSUMER_TIMEOUT
+              value: "3000"
+            - name: CASSANDRA_HOSTS
+              value: "cassandra"
+            - name: CASSANDRA_PORT
+              value: "9042"
+            - name: CASSANDRA_KEYSPACE
+              value: smartenergysystem
+            - name: MONGODB_URI
+              value: "mongodb://mongodb:27017/wacc"
+        #  ports:
+        #    - containerPort: 9200
+        #  env:
+        #   - name: "cassandra.host"
+        #     value: "cassandra"
+        # volumeMounts:
+        #   - name: back-end-mount
+        #     mountPath: /usr/shr/k8/back-end
+        # - name: mongo-sidecar
+        #  image: cvallance/mongo-k8s-sidecar
+#volumeClaimTemplates:
+# - metadata:
+#     name: back-end-mount
+#     annotations:
+#        volume.beta.kubernetes.io/stroage-class: "wacc-ses-storage"
+#   spec:
+#     accessModes:
+#        - ReadWriteOnce
+#      #storageClassName: "models-1-0-0"
+#     resources:
+#        requests:
+#         storage: 100Mi

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+
+kind: StatefulSet
+
+metadata:
+ name: input-gen
+
+spec:
+ serviceName: input-gen
+ replicas: 1
+ selector:
+    matchLabels:
+        #name: mongo
+        role: input-gen
+ template:
+   metadata:
+      labels:
+         role: input-gen
+         #environment: test
+   spec:
+     terminationGracePeriodSeconds: 10
+     containers:
+       - name: input-gen
+         image: swastikrug/input-gen
+         ports:
+           - containerPort: 7050
+         env:
+           - name: "cassandra.host"
+             value: "cassandra"
+         #volumeMounts:
+         #  - name: mongo-persistent-storage
+         #    mountPath: /usr/shr/k8
+      # - name: mongo-sidecar
+      #  image: cvallance/mongo-k8s-sidecar
+         
+ #volumeClaimTemplates:
+ # - metadata:
+ #     name: mongo-persistent-storage
+ #     annotations:
+ #        volume.beta.kubernetes.io/stroage-class: "wacc-ses-storage"
+ #   spec:
+ #     accessModes: 
+ #        - ReadWriteOnce
+      # storageClassName: "models-1-0-0"
+ #     resources:
+  #       requests:
+   #       storage: 1Gi

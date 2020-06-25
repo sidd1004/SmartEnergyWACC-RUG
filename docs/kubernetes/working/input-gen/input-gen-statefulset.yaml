@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: input-gen
+  name: input-gen
+spec:
+  # clusterIP: None
+  ports:
+    - port: 9200
+  selector:
+    role: input-gen
+---
+apiVersion: apps/v1
+
+kind: StatefulSet
+
+metadata:
+  name: input-gen
+
+spec:
+  serviceName: input-gen
+  replicas: 1
+  selector:
+    matchLabels:
+      #name: mongo
+      role: input-gen
+  template:
+    metadata:
+      labels:
+        role: input-gen
+        #environment: test
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: input-gen
+          image: swastikrug/input-gen
+          env:
+            - name: KAFKA_URL
+              value: "kafka://kafka:9092"
+            - name: CASSANDRA_DATAGEN_HOSTS
+              value: "cassandra"
+            - name: CASSANDRA_DATAGEN_PORT
+              value: "9042"
+            - name: CASSANDRA_DATAGEN_KEYSPACE
+              value: "smartenergysystem"
+            - name: CASSANDRA_DATAGEN_TABLE_NAME
+              value: energyCons
+            - name: MONGODB_URI
+              value: "mongodb://mongodb:27017/"
+          #  ports:
+          #    - containerPort: 9200
+          #  env:
+          #   - name: "cassandra.host"
+          #     value: "cassandra"
+          # volumeMounts:
+          #   - name: input-gen-mount
+          #     mountPath: /usr/shr/k8/input-gen
+          # - name: mongo-sidecar
+          #  image: cvallance/mongo-k8s-sidecar
+
+#volumeClaimTemplates:
+# - metadata:
+#     name: input-gen-mount
+#     annotations:
+#        volume.beta.kubernetes.io/stroage-class: "wacc-ses-storage"
+#   spec:
+#     accessModes:
+#        - ReadWriteOnce
+#      #storageClassName: "models-1-0-0"
+#     resources:
+#        requests:
+#         storage: 100Mi
